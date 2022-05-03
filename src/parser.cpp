@@ -271,14 +271,14 @@ namespace parser {
             // If the instruction is conditional, grab condition
             if (ins.srcType == ArgType::COND) {
                 parseCond(tks, srcId);
-
-                // Work around for the dumb structor of the jump opcode
-                if (mnem == "jmp" && ins.dstType == ArgType::IMM) {
-                    srcId |= 0b10000;
-                }
             }
             else if (ins.dstType == ArgType::COND) {
                 parseCond(tks, dstId);
+            }
+
+            // Work around for the dumb structor of the jump opcode
+            if ((mnem == "jmp" || mnem == "call") && ins.dstType == ArgType::IMM) {
+                srcId |= 0b10000;
             }
 
             // Parse dst argument
@@ -422,27 +422,6 @@ namespace parser::statements {
             throwForm("Expected number at %s", tks.first()->dumpPos().c_str());
         }
         bb.put(num);
-    }
-
-    void call(buffer<std::vector<lexer::Token>>& tks, BinaryBuilder<uint16_t>& bb, std::map<std::string, uint16_t>& labels, std::vector<Insertion>& insertions) {
-        uint16_t immVal = 0;
-        std::string immLabel = "";
-        lexer::Token tk = tks.first();
-        if (!parseImm(tks, immVal, immLabel)) {
-            throwForm("Expected immediate value at %s", tks.first()->dumpPos().c_str());
-        }
-
-        // Push ip + 4
-        bb.put(buildInstruction(0x12, 0, 0));
-        bb.put(bb.tell() + 3);
-
-        // Jump imm
-        bb.put(buildInstruction(0x11, 0, 0b10000));
-        uint16_t immAddr = bb.tell();
-        bb.put(immVal);
-        if (!immLabel.empty()) {
-            insertions.push_back(Insertion{ tk, immLabel, immAddr });
-        }
     }
 
     void define(buffer<std::vector<lexer::Token>>& tks, BinaryBuilder<uint16_t>& bb, std::map<std::string, uint16_t>& labels, std::vector<Insertion>& insertions) {

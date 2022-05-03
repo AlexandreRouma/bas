@@ -10,14 +10,22 @@
 namespace parser {
     const std::map<std::string, uint8_t> REGS = {
         // Mnem  Id
-        { "r0",  0 },
-        { "r1",  1 },
-        { "r2",  2 },
-        { "r3",  3 },
-        { "r4",  4 },
-        { "r5",  5 },
-        { "r6",  6 },
-        { "rsp", 7 },
+        { "r0",  0  },
+        { "r1",  1  },
+        { "r2",  2  },
+        { "r3",  3  },
+        { "r4",  4  },
+        { "r5",  5  },
+        { "r6",  6  },
+        { "r7",  7  },
+        { "r8",  8  },
+        { "r9",  9  },
+        { "r10", 10 },
+        { "r11", 11 },
+        { "r12", 12 },
+        { "rxt", 13 },
+        { "rfl", 14 },
+        { "rsp", 15 },
     };
 
     enum ArgType {
@@ -99,7 +107,6 @@ namespace parser {
         void skip(buffer<std::vector<lexer::Token>>& tks, BinaryBuilder<uint16_t>& bb, std::map<std::string, uint16_t>& labels, std::vector<Insertion>& insertions);
         void align(buffer<std::vector<lexer::Token>>& tks, BinaryBuilder<uint16_t>& bb, std::map<std::string, uint16_t>& labels, std::vector<Insertion>& insertions);
         void word(buffer<std::vector<lexer::Token>>& tks, BinaryBuilder<uint16_t>& bb, std::map<std::string, uint16_t>& labels, std::vector<Insertion>& insertions);
-        void call(buffer<std::vector<lexer::Token>>& tks, BinaryBuilder<uint16_t>& bb, std::map<std::string, uint16_t>& labels, std::vector<Insertion>& insertions);
         void define(buffer<std::vector<lexer::Token>>& tks, BinaryBuilder<uint16_t>& bb, std::map<std::string, uint16_t>& labels, std::vector<Insertion>& insertions);
     }
 
@@ -111,7 +118,6 @@ namespace parser {
         { "skip",   { statements::skip } },
         { "align",  { statements::align } },
         { "word",   { statements::word } },
-        { "call",   { statements::call } },
         { "define", { statements::define } },
     };
 

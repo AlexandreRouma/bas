@@ -18,10 +18,10 @@ term_init:
     st [_term_color], r0
 
     ; Load default font
-    .call term_load_default_font
+    call term_load_default_font
 
     ; Clear the screen and init cursor to (0, 0)
-    .call term_clear_screen
+    call term_clear_screen
 
     pop r0
     ret
@@ -36,7 +36,7 @@ term_load_default_font:
     ldi r0, VGA_CRAM_BASE
     ldi r1, _term_default_font
     ldi r2, CRAM_LEN
-    .call memcpy
+    call memcpy
 
     pop r2
     pop r1
@@ -70,7 +70,7 @@ _term_clear_screen_loop:
     ; Set cursor pos to (0, 0)
     xor r0, r0
     xor r1, r1
-    .call term_set_cursor
+    call term_set_cursor
 
     pop r2
     pop r1
@@ -86,7 +86,7 @@ term_flush:
     ldi r0, VGA_VRAM_BASE
     ldi r1, _term_temp_buffer
     ldi r2, VRAM_LEN
-    .call memcpy
+    call memcpy
 
     pop r2
     pop r1
@@ -202,7 +202,7 @@ term_new_line:
     st [_term_cursor_y], r0
     jmp _term_new_line_no_scroll
 _term_new_line_no_inc:
-    .call term_scroll_up
+    call term_scroll_up
 _term_new_line_no_scroll:
 
     pop r1
@@ -242,7 +242,7 @@ _term_print_loop:
     ldi r2, 0x10    ; TODO: Check that this is indeed '\n'
     cmp r1, r2
     jmp@ne _term_print_loop_not_lf
-    .call term_new_line
+    call term_new_line
 _term_print_loop_not_lf:
 
     ; Load X and Y position
@@ -273,7 +273,7 @@ _term_print_loop_not_lf:
     jmp@lo _term_print_loop
 
     ; Since it was at the end, go to new line and continue
-    .call term_new_line
+    call term_new_line
     jmp _term_print_loop
 
 _term_print_loop_end:
@@ -289,8 +289,8 @@ _term_print_loop_end:
 ; Print null terminated string
 ; r0: string pointer
 term_println:
-    .call term_print
-    .call term_new_line
+    call term_print
+    call term_new_line
     ret
 
 
