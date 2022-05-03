@@ -44,8 +44,9 @@ namespace parser {
         { "mov",    0x01,   2,  REG     , REG       },
         { "xch",    0x02,   2,  REG     , REG       },
         { "ld",     0x03,   2,  REG     , MEM_REG   },
-        { "sti",    0x04,   2,  MEM_IMM , REG       },
+        { "ld",     0x17,   2,  REG     , MEM_IMM   },
         { "st",     0x05,   2,  MEM_REG , REG       },
+        { "st",     0x04,   2,  MEM_IMM , REG       },
         { "add",    0x06,   2,  REG     , REG       },
         { "sub",    0x07,   2,  REG     , REG       },
         { "cmp",    0x08,   2,  REG     , REG       },
@@ -64,6 +65,8 @@ namespace parser {
         { "pop",    0x14,   1,  REG     , NONE      },
         { "hlt",    0x15,   1,  NONE    , NONE      },
         { "ret",    0x16,   1,  NONE    , NONE      },
+        { "call",   0x18,   1,  REG     , NONE      },
+        { "call",   0x18,   1,  IMM     , NONE      },
     };
 
     const std::map<std::string, uint8_t> CONDS = {

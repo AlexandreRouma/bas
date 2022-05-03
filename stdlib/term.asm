@@ -15,7 +15,7 @@ term_init:
     
     ; Init color
     ldi r0, 0x0F00
-    sti [_term_color], r0
+    st [_term_color], r0
 
     ; Load default font
     .call term_load_default_font
@@ -98,8 +98,8 @@ term_flush:
 ; r0: Pos X
 ; r1; Pos Y
 term_set_cursor:
-    sti [_term_cursor_x], r0
-    sti [_term_cursor_y], r1
+    st [_term_cursor_x], r0
+    st [_term_cursor_y], r1
     ret
 
 ; Get cursor position
@@ -116,7 +116,7 @@ term_get_cursor:
 ; Set color
 ; r0: Color
 term_set_color:
-    sti [_term_color], r0
+    st [_term_color], r0
     ret
 
 
@@ -188,7 +188,7 @@ term_new_line:
 
     ; Set X cursor position to 0
     xor r0, r0
-    sti [_term_cursor_x], r0
+    st [_term_cursor_x], r0
 
     ; Get current Y positions
     ldi r0, _term_cursor_y
@@ -199,7 +199,7 @@ term_new_line:
     cmp r0, r1
     jmp@ge _term_new_line_no_inc
     inc r0
-    sti [_term_cursor_y], r0
+    st [_term_cursor_y], r0
     jmp _term_new_line_no_scroll
 _term_new_line_no_inc:
     .call term_scroll_up
@@ -268,7 +268,7 @@ _term_print_loop_not_lf:
 
     ; Increment X cursor and check that it's within bound. If yes, continue loop
     inc r5
-    sti [_term_cursor_x], r5
+    st [_term_cursor_x], r5
     cmp r5, r4
     jmp@lo _term_print_loop
 
