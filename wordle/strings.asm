@@ -1,0 +1,1 @@
+motd_str:   .str "The Raccoon Wordle"
