@@ -70,6 +70,9 @@ _kbd_get_event_no_ext:
 
 _kbd_get_event_done:
 
+    ; seed the entropy with event
+    call rand_seed
+
     pop r3
     pop r2
     ret
