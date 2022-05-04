@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+
+./build/bas wordle/main.asm stdlib/term.asm stdlib/string.asm stdlib/keyboard.asm stdlib/keymap_fr_be.asm stdlib/keymap_fr_be_shift.asm stdlib/keymap_fr_be_altgr.asm -f header -o ../raccoon/bitstream_loader/src/rom.h
+cd ../raccoon
+uflake-tools make
+./upload_ryz.sh

@@ -239,7 +239,7 @@ _term_print_loop:
     jmp@eq _term_print_loop_end
 
     ; If it's a new line, go to next line and print next character
-    ldi r2, 0x10    ; TODO: Check that this is indeed '\n'
+    ldi r2, 0x0A    ; TODO: Check that this is indeed '\n'
     cmp r1, r2
     jmp@ne _term_print_loop_not_lf
     call term_new_line
