@@ -1,4 +1,5 @@
 .define WORD_LIST_MASK 0x7F
+
 word_list:
 	.str  "abase"
 	.str  "abbey"
