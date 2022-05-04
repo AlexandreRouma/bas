@@ -13,16 +13,15 @@ rand_seed:
 	ret
 
 ; Gets a random word
-: return r0: the random word
+; return r0: the random word
 rand:
 	push r1
 	push r2
 	push rxt
 	
 	ld r0, [rand_entropy]
-	ldi r1, 0x2000
+	ldi r1, 65521
 	ldi r2, 69
-
 	mul r0, r1
 	add r0, r2
 

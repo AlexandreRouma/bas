@@ -12,7 +12,16 @@ game_loop:
     call term_clear_screen
     call term_flush
 
-    ; 
+test_loop:
+
+    call rand
+    mov r1, r0
+    ldi r0, numbuf
+    call itoa16
+    call term_println
+    call term_flush
+
+    jmp test_loop
 
     jmp game_loop
 
@@ -31,8 +40,7 @@ select_rand_word:
     ; Get n'th string according to r0
     ldi r1, word_list
 _select_rand_word_loop:
-
-
+    ; TODO
 
     pop r1
     pop r0
@@ -40,3 +48,5 @@ _select_rand_word_loop:
 
 end:
     
+
+numbuf: .skip 5
