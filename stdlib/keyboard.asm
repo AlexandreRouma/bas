@@ -28,7 +28,9 @@ kbd_get_event:
     jmp@eq _kbd_get_event_done
 
     ; Get value
-    ld r0, [r3]
+    ldi r2, KBD_BUF_POS
+    add r2, r3
+    ld r0, [r2]
 
     ; Increment buffer position
     ldi r2, KBD_BUF_MASK
@@ -53,7 +55,7 @@ _kbd_get_event_no_ext:
     ; If keycode is a release code, set r1 to 1 and read the rest
     ldi r3, KBD_REL_CODE
     cmp r0, r3
-    jmp@ne _kbd_get_event_done
+    jmp@ne _kbd_get_event_or
 
     ldi r1, 1
     call kbd_get_event
@@ -61,9 +63,11 @@ _kbd_get_event_no_ext:
     ; Set r2 to 0 to not add an ext code
     xor r2, r2
     
-_kbd_get_event_done:
+_kbd_get_event_or:
     ; Or ext code just in case
     or r0, r2
+
+_kbd_get_event_done:
 
     pop r3
     pop r2

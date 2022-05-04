@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <stdexcept>
+#include <string.h>
 
 template<class T>
 class BinaryBuilder {
