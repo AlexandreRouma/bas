@@ -25,7 +25,7 @@ kbd_loop:
     ldi r1, 0xFF
     and r0, r1
 
-    ldi r1, keymap_fr_be_altgr
+    ldi r1, keymap_fr_be
     add r0, r1
     ld r0, [r0]
 

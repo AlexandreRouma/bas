@@ -13,21 +13,35 @@ game_loop:
     call term_flush
 
     ; Print MOTD
-    ldi r0, 1
+    ldi r0, 2
     ldi r1, 1
     call term_set_cursor
     ldi r0, motd_str
     call term_println
     call term_new_line
 
-    ; Press any key
+    ldi r0, begin_str
+    call term_println
+    call term_new_line
+    call term_flush
+
+    ; Wait for any key to be pressed
     xor r2, r2
     xor r3, r3
 rand_loop_thing:
     call kbd_get_event
+    
+    ; Increment random seed
     inc r3
+
+    ; If no event occured, continue waiting
     cmp r0, r2
     jmp@eq rand_loop_thing
+
+    ; Keep track of modifiers
+    call kdb_update_modif_state
+
+    ; If this was a key release, continue waiting
     cmp r1, r2
     jmp@eq rand_loop_thing
 

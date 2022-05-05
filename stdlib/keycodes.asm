@@ -1,0 +1,7 @@
+.define KEYCODE_L_SHIFT 0x12
+.define KEYCODE_L_CTRL  0x14
+.define KEYCODE_L_ALT   0x11
+
+.define KEYCODE_R_SHIFT 0x59
+.define KEYCODE_R_CTRL  0xE014
+.define KEYCODE_R_ALT   0xE011

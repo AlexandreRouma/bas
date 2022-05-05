@@ -53,8 +53,7 @@ term_clear_screen:
     ; Load frame buffer address, size and clear color
     ldi r0, _term_temp_buffer
     ldi r1, VRAM_LEN        ; 80 * 60
-    ldi r2, _term_color
-    ld r2, [r2]
+    ld r2, [_term_color]
 
     ; Clear screen with color
 _term_clear_screen_loop:
@@ -106,10 +105,8 @@ term_set_cursor:
 ; return r0: Pos X
 ; return r1; Pos Y
 term_get_cursor:
-    ldi r0, _term_cursor_x
-    ldi r1, _term_cursor_y
-    ld r0, [r0]
-    ld r1, [r1]
+    ld r0, [_term_cursor_x]
+    ld r1, [_term_cursor_y]
     ret
 
 
@@ -123,8 +120,7 @@ term_set_color:
 ; Get color
 ; return r0: Color
 term_get_color:
-    ldi r0, _term_color
-    ld r0, [r0]
+    ld r0, [_term_color]
     ret
 
 
@@ -161,8 +157,7 @@ _term_scroll_up_loop:
 
     ; Clear last line
     mov r2, r0
-    ldi r0, _term_color
-    ld r0, [r0]
+    ld r0, [_term_color]
 _term_scroll_up_clear_loop:
     st [r1], r0
 
@@ -191,8 +186,7 @@ term_new_line:
     st [_term_cursor_x], r0
 
     ; Get current Y positions
-    ldi r0, _term_cursor_y
-    ld r0, [r0]
+    ld r0, [_term_cursor_y]
 
     ; If not on the last line, increment Y pos
     ldi r1, TERM_HEIGHT_M_1
@@ -246,10 +240,8 @@ _term_print_loop:
 _term_print_loop_not_lf:
 
     ; Load X and Y position
-    ldi r5, _term_cursor_x
-    ldi r6, _term_cursor_y
-    ld r5, [r5]
-    ld r6, [r6]
+    ld r5, [_term_cursor_x]
+    ld r6, [_term_cursor_y]
 
     ; Multiply y pos by term width
     ; TODO: switch out r3 and r2 everywhere to avoid needing to do this
