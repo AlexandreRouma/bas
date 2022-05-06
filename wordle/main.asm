@@ -47,8 +47,8 @@ game_loop:
     mov r5, r0
 
     ; DEBUG ONLY: print word
-    call term_println
-    call term_flush
+    ;call term_println
+    ;call term_flush
     
 question_loop:
     ; Save cursor y pos to r7
