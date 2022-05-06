@@ -28,14 +28,12 @@ kbd_loop:
     
     ; Display character
     ldi r1, 1
-    ldi r2, _kbd_shift_state
-    ld r2, [r2]
+    ld r2, [_kbd_shift_state]
     cmp r2, r1
     jmp@eq kbd_chose_shift
 
     ldi r1, 1
-    ldi r2, _kbd_altgr_state
-    ld r2, [r2]
+    ld r2, [_kbd_altgr_state]
     cmp r2, r1
     jmp@eq kbd_chose_altgr
 

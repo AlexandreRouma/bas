@@ -3,6 +3,10 @@ project(bas)
 
 file(GLOB_RECURSE SRC "src/*.cpp")
 
-add_compile_options(/std:c++17)
+if (MSVC)
+    add_compile_options(/std:c++17)
+else()
+    add_compile_options(-std=c++17)
+endif ()
 
 add_executable(bas ${SRC})

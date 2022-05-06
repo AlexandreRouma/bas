@@ -116,3 +116,36 @@ _memcpy_loop:
     pop r1
     pop r0
     ret
+
+
+; Check if a string contains a character
+; r0: String pointer
+; r1: Character
+; return r2: 1 if the string contains the character, 0 otherwise
+str_contains:
+    push r0
+    push r3
+    push r4
+
+    xor r2, r2
+    xor r4, r4
+
+_str_contains_loop:
+    ld r3, [r0]
+    inc r0
+
+    ; End if null
+    cmp r3, r4
+    jmp@eq _str_contains_end
+
+    ; End if string contains character and set r2 to 1
+    cmp r3, r1
+    jmp@ne _str_contains_loop
+
+    inc r2
+
+_str_contains_end:
+    pop r4
+    pop r3
+    pop r0
+    ret

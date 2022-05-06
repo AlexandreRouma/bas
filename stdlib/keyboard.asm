@@ -156,6 +156,8 @@ _kdb_update_modif_state_end:
     ret
 
 
+; Wait until a key is pressed
+; return r0: Keycode
 kbd_wait_key:
     push r1
     push r2
@@ -172,12 +174,100 @@ _kbd_wait_key_loop:
     pop r1
     ret
 
+
+; Wait until a key is pressed and translate into associated character
 kbd_wait_char:
+    push r1
+    push r2
+
     ; Wait for a key press
     call kbd_wait_key
 
+    ; Decode keycode into character according to modifiers
+    ldi r1, 1
+    ld r2, [KBD_SHIFT_STATE]
+    cmp r2, r1
+    jmp@eq _kbd_wait_char_shift
+
+    ldi r1, 1
+    ld r2, [KBD_ALTGR_STATE]
+    cmp r2, r1
+    jmp@eq _kbd_wait_char_altgr
+
+    ldi r1, keymap_fr_be
+    jmp _kbd_wait_char_next
+
+_kbd_wait_char_shift:
+    ldi r1, keymap_fr_be_shift
+    jmp _kbd_wait_char_next
+
+_kbd_wait_char_altgr:
+    ldi r1, keymap_fr_be_altgr
+    jmp _kbd_wait_char_next
+
+_kbd_wait_char_next:
+    ldi r2, 0xFF
+    and r0, r2
+    add r0, r1
+    ld r0, [r0]
+
+    pop r2
+    pop r1
     ret
 
+
+; Read characters from keyboard until buffer is full or return is pressed
+; r0: String buffer
+; r1: Max number of characters to read
+kbd_read_line:
+    push r0
+    push r1
+    push r2
+    push r3
+
+    ; Move the string pointer to r3
+    mov r3, r0
+
+_kbd_read_line_loop:
+    call kbd_wait_char
+
+    ; If return was pressed, end
+    ldi r2, 0x0A
+    cmp r0, r2
+    jmp@eq _kbd_read_line_end
+
+    ; If null, continue waiting
+    xor r2, r2
+    cmp r0, r2
+    jmp@eq _kbd_read_line_loop
+
+    ; Write character to string
+    st [r3], r0
+
+    ; Write character to screen
+    st [_kbd_read_line_buf], r0
+    ldi r0, _kbd_read_line_buf
+    call term_print
+    call term_flush
+
+    ; Increment counter and continue if there is still enough space
+    xor r2, r2
+    inc r3
+    dec r1
+    cmp r1, r2
+    jmp@ne _kbd_read_line_loop
+
+_kbd_read_line_end:
+    xor r2, r2
+    st [r3], r2
+
+    pop r3
+    pop r2
+    pop r1
+    pop r0
+    ret
+
+_kbd_read_line_buf: .str " "
 
 _kbd_buf_pos:       .word 0
 KBD_SHIFT_STATE:    .word 0
