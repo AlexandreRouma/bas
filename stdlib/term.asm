@@ -285,6 +285,36 @@ term_println:
     call term_new_line
     ret
 
+; Clear single line
+; r0: Y position of line
+term_clear_line:
+    push r0
+    push r1
+    push r2
+
+    ; Calculate address of beginning of line
+    ldi r1, TERM_WIDTH
+    mul r0, r1
+    mdi r1, _term_temp_buffer
+    add r0, r1
+
+    ; Init loop values
+    ld r1, [_term_color]
+    ldi r2, 80
+
+_term_clear_line_loop:
+    ; Write blank character
+    st [r0], r1
+
+    ; Increment counters and continue if not done
+    inc r0
+    dec r2
+    jmp@eq _term_clear_line_loop
+
+    pop r2
+    pop r1
+    pop r0
+    ret
 
 _term_cursor_x:     .word 0
 _term_cursor_y:     .word 0
