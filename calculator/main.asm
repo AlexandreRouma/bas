@@ -10,7 +10,7 @@ start:
     call term_flush
 
     ; Print title
-    ldi r0, motd_str
+    ldi r0, title_str
     call term_println
 
     ; r3 contains the amount of numbers in the stack
@@ -23,7 +23,7 @@ input_loop:
     call term_flush
 
     ldi r0, 2
-    ldi r1, r3
+    mov r1, r3
     inc r1
     call term_set_cursor
 
@@ -33,15 +33,15 @@ input_loop:
 
     ; get first char
     ld r4, [r0]
-    ldi r5, [add_str]
+    ld r5, [add_str]
     cmp r4, r5
     jmp@eq add_nums
 
-    ldi r5, [sub_str]
+    ld r5, [sub_str]
     cmp r4, r5
     jmp@eq sub_nums
 
-    ldi r5, [mul_str]
+    ld r5, [mul_str]
     cmp r4, r5
     jmp@eq mul_nums
 
@@ -78,7 +78,7 @@ mul_nums:
 
 print_result:
     ldi r0, 0
-    ldi r1, r3
+    mov r1, r3
     inc r3
     call term_set_cursor
 
@@ -86,7 +86,7 @@ print_result:
     call term_print
 
     ldi r0, 2
-    ldi r1, r3
+    mov r1, r3
     inc r3
     call term_set_cursor
 
@@ -97,7 +97,7 @@ print_result:
 
 reset_prompt:
     ldi r0, 0
-    ldi r1, r3
+    mov r1, r3
     inc r1
     call term_set_cursor
 
@@ -107,4 +107,4 @@ end:
     hlt
 
 input_buffer: .skip 11
-size_buffer: 10
+size_buffer: .word 10

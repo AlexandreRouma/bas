@@ -295,7 +295,7 @@ term_clear_line:
     ; Calculate address of beginning of line
     ldi r1, TERM_WIDTH
     mul r0, r1
-    mdi r1, _term_temp_buffer
+    ldi r1, _term_temp_buffer
     add r0, r1
 
     ; Init loop values
