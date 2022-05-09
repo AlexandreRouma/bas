@@ -91,6 +91,7 @@ question_loop:
     jmp question_loop
 
 question_win:
+    call term_new_line
     ldi r0, win_str
     call term_println
     call term_flush
@@ -103,10 +104,6 @@ question_win:
 
     ; Print MOTD
     ldi r0, motd_str
-    call term_println
-    call term_new_line
-
-    ldi r0, begin_str
     call term_println
     call term_new_line
     call term_flush
