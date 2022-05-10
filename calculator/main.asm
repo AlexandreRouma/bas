@@ -50,6 +50,18 @@ input_loop:
     cmp r4, r5
     jmp@eq mul_nums
 
+    ld r5, [div_str]
+    cmp r4, r5
+    jmp@eq div_nums
+
+    ld r5, [modulo_str]
+    cmp r4, r5
+    jmp@eq modulo_nums
+
+    ld r5, [drop_str]
+    cmp r4, r5
+    jmp@eq drop_num
+
     ; we have a number to parse
 
     ; do parsing
@@ -111,7 +123,6 @@ sub_nums:
 
     jmp print_result
 
-
 mul_nums:
     ldi r0, 2
     cmp r3, r0
@@ -126,6 +137,55 @@ mul_nums:
 
     jmp print_result
 
+div_nums:
+    ldi r0, 2
+    cmp r3, r0
+    jmp@lo reset_prompt
+
+    pop r1
+
+    ; 0 divider check
+    ldi r2, 0
+    cmp r1, r2
+    jmp@ne _div_nums_contd
+    push r1
+    jmp reset_prompt
+
+_div_nums_contd:
+    pop r0
+
+    call div16
+    
+    dec r3
+    push r1 
+    mov r4, r1
+
+    jmp print_result
+
+modulo_nums:
+    ldi r0, 2
+    cmp r3, r0
+    jmp@lo reset_prompt
+
+    pop r1
+
+    ; 0 divider check
+    ldi r2, 0
+    cmp r1, r2
+    jmp@ne _modulo_nums_contd
+    push r1
+    jmp reset_prompt
+
+_modulo_nums_contd:
+    pop r0
+
+    call div16
+
+    dec r3
+    push r0
+    mov r4, r0
+
+    jmp print_result
 
 print_result:
     ; rm op
@@ -149,10 +209,94 @@ print_result:
     ; print number
     ldi r0, number_buffer
     mov r1, r4
-    call itoa16
+
+itoa10:
+    push r0
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+    push r6
+
+    ; r5,r6 constains the string buffer
+    mov r5, r0
+    mov r6, r0
+    ; r0 contains the number
+    mov r0, r1
+    ; r2 0 constant
+    xor r2, r2
+    ; r3 10 constant
+    ldi r3, 10
+    ; r4 0x30 constant
+    ldi r4, 0x30
+_itoa10_loop:
+    ; check if number is finished
+    cmp r0, r2
+    jmp@eq _itoa10_loop_end
+
+    ; set divisor and divide
+    mov r1, r3
+    call div16
+
+    ; add '0' to rest
+    add r0, r4
+    st [r5], r0
+    ; add quotient back to r0
+    mov r0, r1
+    inc r5
+
+    jmp _itoa10_loop
+
+_itoa10_loop_end:
+    ; set \0
+    st [r5], r2
+    dec r5
+
+_reverse_loop:
+    cmp r5, r6
+    jmp@le _reverse_loop_end
+
+    ld r3, [r5]
+    ld r4, [r6]
+    st [r5], r4
+    st [r6], r3
+
+    dec r5
+    inc r6
+
+    jmp _reverse_loop
+
+_reverse_loop_end:
+    pop r6
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+    pop r0
+    ; ret
+
+    ; call itoa16
     call term_print
 
     call term_new_line
+    jmp input_loop
+
+drop_num:
+    ldi r0, 1
+    cmp r3, r0
+    jmp@lo reset_prompt
+
+    pop r0
+
+    mov r0, r3
+    call term_clear_line
+    inc r0
+    call term_clear_line
+    
+    dec r3
+
     jmp input_loop
 
 reset_prompt:
@@ -168,4 +312,4 @@ end:
 input_buffer: .skip 11
 size_buffer: .word 10
 
-number_buffer: .skip 5
+number_buffer: .skip 10
