@@ -18,6 +18,11 @@ start:
     xor r3, r3
 
 input_loop:
+    ldi r0, 0
+    mov r1, r3
+    inc r1
+    call term_set_cursor
+
     ldi r0, prompt_str
     call term_print
     call term_flush
@@ -53,6 +58,8 @@ input_loop:
     push r0
     inc r3
 
+    jmp input_loop
+
 add_nums:
     ldi r0, 2
     cmp r3, r0
@@ -63,6 +70,8 @@ add_nums:
     add r0, r1
     dec r3
     push r0
+
+    jmp print_result
 
 sub_nums:
     ldi r0, 2
@@ -77,9 +86,15 @@ mul_nums:
 
 
 print_result:
+    ; rm op
+    mov r0, r3
+    inc r0
+    inc r0
+    call term_clear_line
+
     ldi r0, 0
     mov r1, r3
-    inc r3
+    ; do not increase here
     call term_set_cursor
 
     ldi r0, prompt_str
@@ -87,19 +102,19 @@ print_result:
 
     ldi r0, 2
     mov r1, r3
-    inc r3
     call term_set_cursor
 
     ; print number
+    ldi r0, result_str
+    call term_print
 
     call term_new_line
     jmp input_loop
 
 reset_prompt:
-    ldi r0, 0
-    mov r1, r3
-    inc r1
-    call term_set_cursor
+    mov r0, r3
+    inc r0
+    call term_clear_line
 
     jmp input_loop
 
