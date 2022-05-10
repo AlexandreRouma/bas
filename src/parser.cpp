@@ -417,10 +417,17 @@ namespace parser::statements {
     }
 
     void word(buffer<std::vector<lexer::Token>>& tks, BinaryBuilder<uint16_t>& bb, std::map<std::string, uint16_t>& labels, std::vector<Insertion>& insertions) {
-        uint16_t num;
-        if (!parseNum(tks, num)) {
-            throwForm("Expected number at %s", tks.first()->dumpPos().c_str());
+        uint16_t num = 0;
+        std::string label = "";
+        lexer::Token tk = tks.first();
+        if (!parseImm(tks, num, label)) {
+            throwForm("Expected immediate at %s", tks.first()->dumpPos().c_str());
         }
+
+        if (!label.empty()) {
+            insertions.push_back(Insertion{ tk, label, (uint16_t)bb.tell() });
+        }
+
         bb.put(num);
     }
 

@@ -71,10 +71,10 @@ namespace parser {
         { "push",   0x13,   1,  REG     , NONE      },
         { "push",   0x12,   1,  IMM     , NONE      },
         { "pop",    0x14,   1,  REG     , NONE      },
-        { "hlt",    0x15,   1,  NONE    , NONE      },
-        { "ret",    0x16,   1,  NONE    , NONE      },
+        { "hlt",    0x15,   0,  NONE    , NONE      },
+        { "ret",    0x16,   0,  NONE    , NONE      },
         { "call",   0x18,   1,  REG     , NONE      },
-        { "call",   0x18,   1,  IMM     , NONE      },
+        { "call",   0x18,   1,  IMM     , NONE      }
     };
 
     const std::map<std::string, uint8_t> CONDS = {
