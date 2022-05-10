@@ -80,13 +80,17 @@ namespace parser {
     const std::map<std::string, uint8_t> CONDS = {
         // Mnem  Id
         { "nc",  0b0000 },
-        { "eq",  0b1110 },
-        { "ne",  0b1111 },
-        { "gr",  0b1000 },
-        { "ge",  0b1001 },
-        { "lo",  0b0100 },
-        { "le",  0b0101 },
-        { "cf",  0b0001 }
+        { "eq",  0b0110 },
+        { "ne",  0b0001 },
+        { "gr",  0b1101 },
+        { "ge",  0b1100 },
+        { "lo",  0b1011 },
+        { "le",  0b1010 },
+        { "ab",  0b0101 },
+        { "ae",  0b0100 },
+        { "bl",  0b0011 },
+        { "cf",  0b0011 },
+        { "be",  0b0010 }
     };
 
     struct Insertion {
