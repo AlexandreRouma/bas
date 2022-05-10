@@ -53,9 +53,32 @@ input_loop:
     ; we have a number to parse
 
     ; do parsing
+    xor r2, r2
+atoi_loop:
+    ld r4, [r0]
+    ; check for NULL
+    xor r5, r5 
+    cmp r4, r5
+    jmp@eq atoi_finished
+    ; check if it is in '0' and '9'
+    ldi r5, 0x30
+    sub r4, r5
+    jmp@lo atoi_finished
+    ldi r5, 9
+    cmp r4, r5
+    jmp@gr atoi_finished
+    ; add char to value
+    ldi r5, 10
+    mul r2, r5
+    add r2, r4
+    
+    inc r0
+    jmp atoi_loop
+
+atoi_finished:
 
     ; add number to stack
-    push r0
+    push r2
     inc r3
 
     jmp input_loop
@@ -70,6 +93,7 @@ add_nums:
     add r0, r1
     dec r3
     push r0
+    mov r4, r0
 
     jmp print_result
 
@@ -78,11 +102,29 @@ sub_nums:
     cmp r3, r0
     jmp@lo reset_prompt
 
+    pop r1
+    pop r0
+    sub r0, r1
+    dec r3
+    push r0
+    mov r4, r0
+
+    jmp print_result
+
 
 mul_nums:
     ldi r0, 2
     cmp r3, r0
     jmp@lo reset_prompt
+
+    pop r1
+    pop r0
+    mul r0, r1
+    dec r3
+    push r0
+    mov r4, r0
+
+    jmp print_result
 
 
 print_result:
@@ -105,7 +147,9 @@ print_result:
     call term_set_cursor
 
     ; print number
-    ldi r0, result_str
+    ldi r0, number_buffer
+    mov r1, r4
+    call itoa16
     call term_print
 
     call term_new_line
@@ -123,3 +167,5 @@ end:
 
 input_buffer: .skip 11
 size_buffer: .word 10
+
+number_buffer: .skip 5

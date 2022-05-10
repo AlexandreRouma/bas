@@ -309,7 +309,7 @@ _term_clear_line_loop:
     ; Increment counters and continue if not done
     inc r0
     dec r2
-    jmp@eq _term_clear_line_loop
+    jmp@ne _term_clear_line_loop
 
     pop r2
     pop r1
