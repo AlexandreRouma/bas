@@ -5,7 +5,7 @@ div16:
 
 _div16_loop:
     cmp r0, r1
-    jmp@lo _div16_done
+    jmp@bl _div16_done
 
     inc r2
     sub r0, r1

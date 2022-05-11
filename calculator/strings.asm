@@ -53,7 +53,7 @@ _itoa10_loop_end:
 
 _itoa_10_reverse_loop:
     cmp r5, r6
-    jmp@le _reverse_loop_end
+    jmp@le _itoa_10_reverse_loop_end
 
     ld r3, [r5]
     ld r4, [r6]
@@ -63,7 +63,7 @@ _itoa_10_reverse_loop:
     dec r5
     inc r6
 
-    jmp _reverse_loop
+    jmp _itoa_10_reverse_loop
 
 _itoa_10_reverse_loop_end:
     pop r6
@@ -75,7 +75,7 @@ _itoa_10_reverse_loop_end:
     pop r0
     ret
 
-title_str:      .str "  RPN Calculator"
+title_str:      .str "  RPN Calculator 2.0"
 prompt_str:     .str ">           "
 add_str:        .str "+"
 sub_str:        .str "-"
