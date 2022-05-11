@@ -1,5 +1,3 @@
-.org 0x0000
-
 start:
     ; Init the stack
     ldi rsp, 0x8000

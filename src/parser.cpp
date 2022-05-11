@@ -275,12 +275,7 @@ namespace parser {
             else if (ins.dstType == ArgType::COND) {
                 parseCond(tks, dstId);
             }
-
-            // Work around for the dumb structor of the jump opcode
-            if ((mnem == "jmp" || mnem == "call") && ins.dstType == ArgType::IMM) {
-                srcId |= 0b10000;
-            }
-
+            
             // Parse dst argument
             if (ins.dstType == ArgType::IMM) { if (!parseImm(tks, dstImm, dstImmLabel)) { continue; } }
             else if (ins.dstType == ArgType::MEM_IMM) { if (!parseMemImm(tks, dstImm, dstImmLabel)) { continue; } }

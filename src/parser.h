@@ -46,35 +46,71 @@ namespace parser {
         ArgType srcType;
     };
 
+    // const std::vector<InstDesc> INSTRS = {
+    //     // Mnemo    Op      N   Dst       Src
+    //     { "ldi",    0x00,   2,  REG     , IMM       },
+    //     { "mov",    0x01,   2,  REG     , REG       },
+    //     { "xch",    0x02,   2,  REG     , REG       },
+    //     { "ld",     0x03,   2,  REG     , MEM_REG   },
+    //     { "ld",     0x17,   2,  REG     , MEM_IMM   },
+    //     { "st",     0x05,   2,  MEM_REG , REG       },
+    //     { "st",     0x04,   2,  MEM_IMM , REG       },
+    //     { "add",    0x06,   2,  REG     , REG       },
+    //     { "sub",    0x07,   2,  REG     , REG       },
+    //     { "cmp",    0x08,   2,  REG     , REG       },
+    //     { "mul",    0x09,   2,  REG     , REG       },
+    //     { "inc",    0x0A,   1,  REG     , NONE      },
+    //     { "dec",    0x0B,   1,  REG     , NONE      },
+    //     { "xor",    0x0C,   2,  REG     , REG       },
+    //     { "and",    0x0D,   2,  REG     , REG       },
+    //     { "or",     0x0E,   2,  REG     , REG       },
+    //     { "shl",    0x0F,   2,  REG     , ID_IMM    },
+    //     { "shr",    0x10,   2,  REG     , ID_IMM    },
+    //     { "jmp",    0x11,   1,  REG     , COND      },
+    //     { "jmp",    0x11,   1,  IMM     , COND      },
+    //     { "push",   0x13,   1,  REG     , NONE      },
+    //     { "push",   0x12,   1,  IMM     , NONE      },
+    //     { "pop",    0x14,   1,  REG     , NONE      },
+    //     { "hlt",    0x15,   0,  NONE    , NONE      },
+    //     { "ret",    0x16,   0,  NONE    , NONE      },
+    //     { "call",   0x18,   1,  REG     , NONE      },
+    //     { "call",   0x18,   1,  IMM     , NONE      }
+    // };
+
+    // Bit 0: Immediate if set
+
     const std::vector<InstDesc> INSTRS = {
         // Mnemo    Op      N   Dst       Src
-        { "ldi",    0x00,   2,  REG     , IMM       },
-        { "mov",    0x01,   2,  REG     , REG       },
-        { "xch",    0x02,   2,  REG     , REG       },
-        { "ld",     0x03,   2,  REG     , MEM_REG   },
-        { "ld",     0x17,   2,  REG     , MEM_IMM   },
-        { "st",     0x05,   2,  MEM_REG , REG       },
-        { "st",     0x04,   2,  MEM_IMM , REG       },
-        { "add",    0x06,   2,  REG     , REG       },
-        { "sub",    0x07,   2,  REG     , REG       },
-        { "cmp",    0x08,   2,  REG     , REG       },
-        { "mul",    0x09,   2,  REG     , REG       },
+        { "ld",     0x00,   2,  REG     , MEM_REG   },
+        { "ld",     0x01,   2,  REG     , MEM_IMM   },
+        { "st",     0x02,   2,  MEM_REG , REG       },
+        { "st",     0x03,   2,  MEM_IMM , REG       },
+        { "mov",    0x04,   2,  REG     , REG       },
+        { "ldi",    0x05,   2,  REG     , IMM       },
+        { "xch",    0x06,   2,  REG     , REG       },
+
+        { "add",    0x07,   2,  REG     , REG       },
+        { "sub",    0x08,   2,  REG     , REG       },
+        { "cmp",    0x09,   2,  REG     , REG       },
         { "inc",    0x0A,   1,  REG     , NONE      },
         { "dec",    0x0B,   1,  REG     , NONE      },
-        { "xor",    0x0C,   2,  REG     , REG       },
-        { "and",    0x0D,   2,  REG     , REG       },
-        { "or",     0x0E,   2,  REG     , REG       },
-        { "shl",    0x0F,   2,  REG     , ID_IMM    },
-        { "shr",    0x10,   2,  REG     , ID_IMM    },
-        { "jmp",    0x11,   1,  REG     , COND      },
-        { "jmp",    0x11,   1,  IMM     , COND      },
-        { "push",   0x13,   1,  REG     , NONE      },
-        { "push",   0x12,   1,  IMM     , NONE      },
+        { "mul",    0x0C,   2,  REG     , REG       },
+        { "xor",    0x0D,   2,  REG     , REG       },
+        { "and",    0x0E,   2,  REG     , REG       },
+        { "or",     0x0F,   2,  REG     , REG       },
+        { "shl",    0x10,   2,  REG     , ID_IMM    },
+        { "shr",    0x11,   2,  REG     , ID_IMM    },
+
+        { "push",   0x12,   1,  REG     , NONE      },
+        { "push",   0x13,   1,  IMM     , NONE      },
         { "pop",    0x14,   1,  REG     , NONE      },
-        { "hlt",    0x15,   0,  NONE    , NONE      },
-        { "ret",    0x16,   0,  NONE    , NONE      },
+
+        { "jmp",    0x16,   1,  REG     , COND      },
+        { "jmp",    0x17,   1,  IMM     , COND      },
         { "call",   0x18,   1,  REG     , NONE      },
-        { "call",   0x18,   1,  IMM     , NONE      }
+        { "call",   0x19,   1,  IMM     , NONE      },
+        { "ret",    0x1A,   0,  NONE    , NONE      },
+        { "hlt",    0x1B,   0,  NONE    , NONE      }
     };
 
     const std::map<std::string, uint8_t> CONDS = {
