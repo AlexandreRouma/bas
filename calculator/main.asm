@@ -1,5 +1,9 @@
 .org 0x0000
 
+; Interrupt Vector
+jmp start
+ret
+
 start:
     ; Init the stack
     ldi rsp, 0x8000
