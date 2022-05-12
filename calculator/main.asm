@@ -12,7 +12,13 @@ start:
     call term_init
     call term_clear_screen
     call term_flush
-
+calculator:
+    push r0
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
     ; Print title
     ldi r0, title_str
     call term_println
@@ -21,7 +27,7 @@ start:
     ; therefore also the line at which we currently are
     xor r3, r3
 
-input_loop:
+_calculator_input_loop:
     ldi r0, 0
     mov r1, r3
     inc r1
@@ -44,65 +50,69 @@ input_loop:
     ld r4, [r0]
     ld r5, [add_str]
     cmp r4, r5
-    jmp@eq add_nums
+    jmp@eq _calculator_add_nums
 
     ld r5, [sub_str]
     cmp r4, r5
-    jmp@eq sub_nums
+    jmp@eq _calculator_sub_nums
 
     ld r5, [mul_str]
     cmp r4, r5
-    jmp@eq mul_nums
+    jmp@eq _calculator_mul_nums
 
     ld r5, [div_str]
     cmp r4, r5
-    jmp@eq div_nums
+    jmp@eq _calculator_div_nums
 
     ld r5, [modulo_str]
     cmp r4, r5
-    jmp@eq modulo_nums
+    jmp@eq _calculator_modulo_nums
 
     ld r5, [drop_str]
     cmp r4, r5
-    jmp@eq drop_num
+    jmp@eq _calculator_drop_num
+
+    ld r5, [exit_str]
+    cmp r4, r5
+    jmp@eq _calculator_end
 
     ; we have a number to parse
 
     ; do parsing
     xor r2, r2
-atoi_loop:
+_calculator_atoi_loop:
     ld r4, [r0]
     ; check for NULL
     xor r5, r5 
     cmp r4, r5
-    jmp@eq atoi_finished
+    jmp@eq _calculator_atoi_finished
     ; check if it is in '0' and '9'
     ldi r5, 0x30
     sub r4, r5
-    jmp@lo atoi_finished
+    jmp@lo _calculator_atoi_finished
     ldi r5, 9
     cmp r4, r5
-    jmp@gr atoi_finished
+    jmp@gr _calculator_atoi_finished
     ; add char to value
     ldi r5, 10
     mul r2, r5
     add r2, r4
     
     inc r0
-    jmp atoi_loop
+    jmp _calculator_atoi_loop
 
-atoi_finished:
+_calculator_atoi_finished:
 
     ; add number to stack
     push r2
     inc r3
 
-    jmp input_loop
+    jmp _calculator_input_loop
 
-add_nums:
+_calculator_add_nums:
     ldi r0, 2
     cmp r3, r0
-    jmp@lo reset_prompt
+    jmp@lo _calculator_reset_prompt
 
     pop r1
     pop r0
@@ -111,12 +121,12 @@ add_nums:
     push r0
     mov r4, r0
 
-    jmp print_result
+    jmp _calculator_print_result
 
-sub_nums:
+_calculator_sub_nums:
     ldi r0, 2
     cmp r3, r0
-    jmp@lo reset_prompt
+    jmp@lo _calculator_reset_prompt
 
     pop r1
     pop r0
@@ -125,12 +135,12 @@ sub_nums:
     push r0
     mov r4, r0
 
-    jmp print_result
+    jmp _calculator_print_result
 
-mul_nums:
+_calculator_mul_nums:
     ldi r0, 2
     cmp r3, r0
-    jmp@lo reset_prompt
+    jmp@lo _calculator_reset_prompt
 
     pop r1
     pop r0
@@ -139,23 +149,23 @@ mul_nums:
     push r0
     mov r4, r0
 
-    jmp print_result
+    jmp _calculator_print_result
 
-div_nums:
+_calculator_div_nums:
     ldi r0, 2
     cmp r3, r0
-    jmp@lo reset_prompt
+    jmp@lo _calculator_reset_prompt
 
     pop r1
 
     ; 0 divider check
     ldi r2, 0
     cmp r1, r2
-    jmp@ne _div_nums_contd
+    jmp@ne _calculator_div_nums_contd
     push r1
-    jmp reset_prompt
+    jmp _calculator_reset_prompt
 
-_div_nums_contd:
+_calculator_div_nums_contd:
     pop r0
 
     call div16
@@ -164,23 +174,23 @@ _div_nums_contd:
     push r1 
     mov r4, r1
 
-    jmp print_result
+    jmp _calculator_print_result
 
-modulo_nums:
+_calculator_modulo_nums:
     ldi r0, 2
     cmp r3, r0
-    jmp@lo reset_prompt
+    jmp@lo _calculator_reset_prompt
 
     pop r1
 
     ; 0 divider check
     ldi r2, 0
     cmp r1, r2
-    jmp@ne _modulo_nums_contd
+    jmp@ne _calculator_modulo_nums_contd
     push r1
-    jmp reset_prompt
+    jmp _calculator_reset_prompt
 
-_modulo_nums_contd:
+_calculator_modulo_nums_contd:
     pop r0
 
     call div16
@@ -189,9 +199,9 @@ _modulo_nums_contd:
     push r0
     mov r4, r0
 
-    jmp print_result
+    jmp _calculator_print_result
 
-print_result:
+_calculator_print_result:
     ; rm op
     mov r0, r3
     inc r0
@@ -218,12 +228,12 @@ print_result:
     call term_print
 
     call term_new_line
-    jmp input_loop
+    jmp _calculator_input_loop
 
-drop_num:
+_calculator_drop_num:
     ldi r0, 1
     cmp r3, r0
-    jmp@lo reset_prompt
+    jmp@lo _calculator_reset_prompt
 
     pop r0
 
@@ -234,17 +244,23 @@ drop_num:
     
     dec r3
 
-    jmp input_loop
+    jmp _calculator_input_loop
 
-reset_prompt:
+_calculator_reset_prompt:
     mov r0, r3
     inc r0
     call term_clear_line
 
-    jmp input_loop
+    jmp _calculator_input_loop
 
-end:
-    hlt
+_calculator_end:
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+    pop r0
+    ret
 
 input_buffer: .skip 11
 size_buffer: .word 10
